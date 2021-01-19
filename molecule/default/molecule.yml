@@ -33,6 +33,7 @@ provisioner:
   inventory:
     host_vars:
       wgnode1:
+        wg_hide_private_key: false
         wg_configs:
           wg0:
             interface:
@@ -45,6 +46,7 @@ provisioner:
                 AllowedIPs: [ '192.0.2.2/32' ]
                 Endpoint: '198.51.100.3:51820'
       wgnode2:
+        wg_hide_private_key: false
         wg_configs:
           wg0:
             interface:

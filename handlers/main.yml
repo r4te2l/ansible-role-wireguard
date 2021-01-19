@@ -10,6 +10,6 @@
   loop: "{{ wg_configs_result.results }}"
   loop_control:
     loop_var: wg_service
-  no_log: wg_hide_private_key
+  no_log: "{{ wg_hide_private_key }}"
   become: true
   listen: 'wg services'
