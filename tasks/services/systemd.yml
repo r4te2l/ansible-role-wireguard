@@ -1,0 +1,11 @@
+---
+- name: "Manage Wireguard Systemd Services"
+  systemd:
+    enabled: true
+    name: "{{ wg_systemd_service_prefix }}{{ wg_service.wg_interface.key }}"
+    state: 'started'
+  loop: "{{ wg_configs_result.results }}"
+  loop_control:
+    loop_var: wg_service
+  no_log: true
+  become: true

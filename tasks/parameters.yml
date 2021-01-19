@@ -1,0 +1,10 @@
+---
+- name: "Define wg_packages"
+  set_fact:
+    wg_packages: "{{ __wg_packages }}"
+  when: wg_packages is not defined
+
+- name: "Define wg_package_state"
+  set_fact:
+    wg_package_state: "{{ __wg_package_state }}"
+  when: wg_package_state is not defined

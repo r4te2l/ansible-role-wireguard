@@ -1,0 +1,12 @@
+---
+- name: "Configure Wireguard Interfaces"
+  template:
+    dest: "{{ wg_config_path }}/{{ wg_interface.key }}.conf"
+    src: 'etc/wireguard/INTERFACE.conf.j2'
+  loop: "{{ wg_configs | dict2items }}"
+  loop_control:
+    loop_var: wg_interface
+  register: wg_configs_result
+  notify: 'wg services'
+  no_log: true
+  become: true

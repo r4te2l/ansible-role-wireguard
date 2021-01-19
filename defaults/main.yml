@@ -1,0 +1,28 @@
+---
+# defaults file for wireguard
+wg_update_pkg_cache: true
+wg_systemd_service_prefix: 'wg-quick@'
+wg_config_path: '/etc/wireguard'
+wg_configs: {}
+  # wg0: # INTERFACE
+  #   interface: # [Interface] Config Section
+  #     PrivateKey: 'uP8UTl8CceQ2AAiUaU1W/+PwmOy9y7/TE3JB5uLGyWw='
+  #     ListenPort: 51820
+  #     FwMark: 0
+  #     Address: 192.0.2.1/24
+  #     DNS: 8.8.8.8
+  #     MTU: 1420
+  #     Table: auto
+  #     PreUp: []
+  #     PostUp: []
+  #     PreDown: []
+  #     PostDown: []
+  #     SaveConfig: true
+  #   peer: # [Peer] Config Section
+  #     peerA: # generic name
+  #       PublicKey: 'M6xTAj1VNpE6sXMk24jJ5/iCFOmqINVYZp8MAAJE7Eo='
+  #       PresharedKey:
+  #       AllowedIPs:
+  #         - 102.0.2.2/24
+  #       Endpoint: 'fqdn:51820'
+  #       PersistentKeepalive: 0

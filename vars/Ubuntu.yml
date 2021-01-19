@@ -1,0 +1,4 @@
+---
+__wg_packages:
+  - wireguard
+__wg_package_state: 'latest'

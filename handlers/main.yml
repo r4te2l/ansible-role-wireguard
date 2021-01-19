@@ -1,0 +1,15 @@
+---
+# handlers file for wireguard
+- name: 'Restart Wireguard Services'
+  when:
+    - ansible_service_mgr == 'systemd'
+    - wg_service.changed
+  systemd:
+    name: "{{ wg_systemd_service_prefix }}{{ wg_service.wg_interface.key }}"
+    state: 'restarted'
+  loop: "{{ wg_configs_result.results }}"
+  loop_control:
+    loop_var: wg_service
+  no_log: true
+  become: true
+  listen: 'wg services'

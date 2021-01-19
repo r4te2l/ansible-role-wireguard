@@ -1,0 +1,58 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+platforms:
+  - name: wgnode1
+    box: ubuntu/focal64
+    interfaces:
+      - auto_config: true
+        ip: 198.51.100.2
+        network_name: private_network
+        type: static
+  - name: wgnode2
+    box: ubuntu/focal64
+    interfaces:
+      - auto_config: true
+        ip: 198.51.100.3
+        network_name: private_network
+        type: static
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  inventory:
+    host_vars:
+      wgnode1:
+        wg_configs:
+          wg0:
+            interface:
+              PrivateKey: 'uP8UTl8CceQ2AAiUaU1W/+PwmOy9y7/TE3JB5uLGyWw='
+              ListenPort: 51820
+              Address: 192.0.2.1/24
+            peer:
+              wgnode2:
+                PublicKey: 'M6xTAj1VNpE6sXMk24jJ5/iCFOmqINVYZp8MAAJE7Eo='
+                AllowedIPs: [ '192.0.2.2/32' ]
+                Endpoint: '198.51.100.3:51820'
+      wgnode2:
+        wg_configs:
+          wg0:
+            interface:
+              PrivateKey: 'INsI9OkhP9BB6P/qE+NYZOr6MUJB0haMUkCZkXJatUg='
+              ListenPort: 51820
+              Address: 192.0.2.2/24
+            peer:
+              wgnode2:
+                PublicKey: 'JwVSBB+phE4odPHFu4jl/bxzPr3sY3XWd2ODqL/HMQQ='
+                AllowedIPs: [ '192.0.2.1/32' ]
+                Endpoint: '198.51.100.3:51820'

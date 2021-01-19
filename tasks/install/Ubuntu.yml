@@ -1,0 +1,7 @@
+---
+- name: "Install wireguard packages"
+  apt:
+    name: "{{ wg_packages }}"
+    state: "{{ wg_package_state }}"
+    update_cache: "{{ wg_update_pkg_cache }}"
+  become: true

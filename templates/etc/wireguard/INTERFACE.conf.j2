@@ -1,0 +1,65 @@
+{{ ansible_managed | comment }}
+[Interface]
+PrivateKey = {{ wg_interface.value.interface.PrivateKey }}
+ListenPort = {{ wg_interface.value.interface.ListenPort | default('51820') }}
+{% if wg_interface.value.interface.FwMark is defined %}
+FwMark = {{ wg_interface.value.interface.FwMark }}
+{% endif %}
+{% if wg_interface.value.interface.Address is defined %}
+Address = {{ wg_interface.value.interface.Address }}
+{% endif %}
+{% if wg_interface.value.interface.DNS is defined %}
+{% for wg_dns in wg_interface.value.interface.DNS %}
+DNS = {{ wg_dns }}
+{% endfor %}
+{% endif %}
+{% if wg_interface.value.interface.MTU is defined %}
+MTU = {{ wg_interface.value.interface.MTU }}
+{% endif %}
+{% if wg_interface.value.interface.Table is defined %}
+Table = {{ wg_interface.value.interface.Table }}
+{% endif %}
+{% if wg_interface.value.interface.PreUp is defined %}
+{% for wg_preup in wg_interface.value.interface.PreUp %}
+PreUp = {{ wg_preup }}
+{% endfor %}
+{% endif %}
+{% if wg_interface.value.interface.PostUp is defined %}
+{% for wg_postup in wg_interface.value.interface.PostUp %}
+PostUp = {{ wg_postup }}
+{% endfor %}
+{% endif %}
+{% if wg_interface.value.interface.PreDown is defined %}
+{% for wg_predown in wg_interface.value.interface.PreDown %}
+PreDown = {{ wg_predown }}
+{% endfor %}
+{% endif %}
+{% if wg_interface.value.interface.PostDown is defined %}
+{% for wg_postdown in wg_interface.value.interface.PostDown %}
+PostDown = {{ wg_postdown }}
+{% endfor %}
+{% endif %}
+{% if wg_interface.value.interface.SaveConfig is defined %}
+SaveConfig = {{ wg_interface.value.interface.SaveConfig }}
+{% endif %}
+
+{% for peer, peerv in wg_interface.value.peer | dictsort -%}
+{{ peer | comment }}
+[Peer]
+PublicKey = {{ peerv.PublicKey }}
+{% if peerv.PresharedKey is defined %}
+PresharedKey = {{ peerv.PresharedKey }}
+{% endif %}
+{% if peerv.AllowedIPs is defined %}
+{% for wg_peer_ip in peerv.AllowedIPs %}
+AllowedIPs = {{ wg_peer_ip }}
+{% endfor %}
+{% endif %}
+{% if peerv.Endpoint is defined %}
+Endpoint = {{ peerv.Endpoint }}
+{% endif %}
+{% if peerv.PersistentKeepalive is defined %}
+PersistentKeepalive = {{ peerv.PersistentKeepalive }}
+{% endif %}
+
+{% endfor -%}

@@ -1,0 +1,22 @@
+---
+# tasks file for wireguard
+- name: "Include {{ ansible_distribution }} vars"
+  include_vars: "{{ ansible_distribution }}.yml"
+
+- name: "Define Parameters"
+  include_tasks: "parameters.yml"
+
+- name: "Install Wireguard"
+  include_tasks: "{{ item }}"
+  with_first_found:
+    - "install/{{ ansible_distribution }}.yml"
+    - 'install/generic.yml'
+
+- name: "Configure Wireguard"
+  include_tasks: "configure.yml"
+
+- name: "Manage Wireguard Services"
+  include_tasks: "{{ item }}"
+  with_first_found:
+    - "services/{{ ansible_service_mgr }}.yml"
+    - 'services/generic.yml'

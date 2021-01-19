@@ -1,0 +1,7 @@
+---
+- name: "Install wireguard packages"
+  package:
+    name: "{{ item }}"
+    state: "{{ wg_package_state }}"
+  loop: "{{ wg_packages }}"
+  become: true
