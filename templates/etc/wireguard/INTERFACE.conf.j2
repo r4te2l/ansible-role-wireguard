@@ -42,7 +42,7 @@ PostDown = {{ wg_postdown }}
 {% if wg_interface.value.interface.SaveConfig is defined %}
 SaveConfig = {{ wg_interface.value.interface.SaveConfig }}
 {% endif %}
-{% if wg_interface.value.peer is defined %}
+{% if wg_interface.value.peer is defined and wg_interface.value.peer %}
 {% for peer, peerv in wg_interface.value.peer | dictsort -%}
 {{ peer | comment }}
 [Peer]
