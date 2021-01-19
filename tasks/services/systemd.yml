@@ -7,5 +7,5 @@
   loop: "{{ wg_configs_result.results }}"
   loop_control:
     loop_var: wg_service
-  no_log: true
+  no_log: wg_hide_private_key
   become: true

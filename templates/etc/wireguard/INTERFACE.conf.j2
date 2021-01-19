@@ -42,7 +42,7 @@ PostDown = {{ wg_postdown }}
 {% if wg_interface.value.interface.SaveConfig is defined %}
 SaveConfig = {{ wg_interface.value.interface.SaveConfig }}
 {% endif %}
-
+{% if wg_interface.value.peer is defined %}
 {% for peer, peerv in wg_interface.value.peer | dictsort -%}
 {{ peer | comment }}
 [Peer]
@@ -61,5 +61,5 @@ Endpoint = {{ peerv.Endpoint }}
 {% if peerv.PersistentKeepalive is defined %}
 PersistentKeepalive = {{ peerv.PersistentKeepalive }}
 {% endif %}
-
-{% endfor -%}
+{% endfor %}
+{% endif -%}

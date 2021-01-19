@@ -1,6 +1,7 @@
 ---
 # defaults file for wireguard
 wg_update_pkg_cache: true
+wg_hide_private_key: true
 wg_systemd_service_prefix: 'wg-quick@'
 wg_config_path: '/etc/wireguard'
 wg_configs: {}
