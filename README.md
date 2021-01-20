@@ -1,48 +1,79 @@
-Role Name
+wireguard
 =========
 
-A brief description of the role goes here.
+Manages Wireguard Configuration and Services
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should
-be mentioned here. For instance, if the role uses the EC2 module, it may be a
-good idea to mention in this section that the boto package is required.
+N/A
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including
-any variables that are in defaults/main.yml, vars/main.yml, and any variables
-that can/should be set via parameters to the role. Any variables that are read
-from other roles and/or the global scope (ie. hostvars, group vars, etc.) should
-be mentioned here as well.
+| Variable                                           | Purpose                                                                                                                              | Type              | Default          |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------- | ---------------- |
+| wg_update_pkg_cache                                | Update Package Cache prior to installing wireguard                                                                                   | bool              | true             |
+| wg_hide_private_key                                | Hide the private key from ansible output                                                                                             | bool              | true             |
+| wg_systemd_service_prefix                          | Systemd service prefix                                                                                                               | string            | 'wg-quick@'      |
+| wg_config_path                                     | Path to wireguard configuration directory                                                                                            | string            | '/etc/wireguard' |
+| wg_configs                                         | Dictionary of wireguard configurations                                                                                               | dictionary        | {}               |
+| wg_configs.INTERFACE                               | Defines a Wireguard Interface                                                                                                        | dictionary        | `undefined`      |
+| wg_configs.INTERFACE.interface                     | Interface settings for INTERFACE                                                                                                     | dictionary        | `undefined`      |
+| wg_configs.INTERFACE.interface.PrivateKey          | WG Private Key for INTERFACE                                                                                                         | string            | `undefined`      |
+| wg_configs.INTERFACE.interface.ListenPort          | WG Listen Port for INTERFACE                                                                                                         | integer           | `undefined`      |
+| wg_configs.INTERFACE.interface.FwMark              | See [WG Documentation](https://www.wireguard.com/netns/#routing-all-your-traffic)                                                    | integer           | `undefined`      |
+| wg_configs.INTERFACE.interface.Address             | IP Address for WG INTERFACE                                                                                                          | string            | `undefined`      |
+| wg_configs.INTERFACE.interface.DNS                 | DNS for WG INTERFACE                                                                                                                 | string            | `undefined`      |
+| wg_configs.INTERFACE.interface.Table               | Controls the routing table to which routes are added                                                                                 | string            | `undefined`      |
+| wg_configs.INTERFACE.interface.PreUp               | List of script snippets which will be executed by bash                                                                               | list (of strings) | `undefined`      |
+| wg_configs.INTERFACE.interface.PostUp              | List of script snippets which will be executed by bash                                                                               | list (of strings) | `undefined`      |
+| wg_configs.INTERFACE.interface.PreDown             | List of script snippets which will be executed by bash                                                                               | list (of strings) | `undefined`      |
+| wg_configs.INTERFACE.interface.PostDown            | List of script snippets which will be executed by bash                                                                               | list (of strings) | `undefined`      |
+| wg_configs.INTERFACE.interface.SaveConfig          | If set to `true', the configuration is saved from the current state of the interface upon shutdown | bool              | `undefined` |                   |                  |
+| wg_configs.INTERFACE.peer                          | Peer settings for INTERFACE                                                                                                          | dictionary        | `undefined`      |
+| wg_configs.INTERFACE.peer.PEER                     | Defines a peer for interface INTERFACE                                                                                               | dictionary        | `undefined`      |
+| wg_configs.INTERFACE.peer.PEER.PublicKey           | public key calculated by wg pubkey                                                                                                   | string            | `undefined`      |
+| wg_configs.INTERFACE.peer.PEER.PresharedKey        | preshared key generated by wg genpsk                                                                                                 | string            | `undefined`      |
+| wg_configs.INTERFACE.peer.PEER.AllowedIPs          | list of IP (v4 or v6) addresses with CIDR masks from which incoming traffic for this peer is allowed                                 | list (of strings) | `undefined`      |
+| wg_configs.INTERFACE.peer.PEER.Endpoint            | an endpoint IP or hostname, followed by a colon, and then a port number                                                              | string            | `undefined`      |
+| wg_configs.INTERFACE.peer.PEER.PersistentKeepalive | seconds interval, between 1 and 65535 inclusive, of how often to send an authenticated empty packet to the peer                      | integer           | `undefined`                 |
+
+**Ubuntu Specific Variables**
+
+| Variable         | Purpose                      | Type              | Default         |
+| ---------------- | ---------------------------- | ----------------- | --------------- |
+| wg_packages      | Wireguard packages to manage | list (of strings) | [ 'wireguard' ] |
+| wg_package_state | Package state                | string            | 'latest'        |
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in
-regards to parameters that may need to be set for other roles, or variables that
-are used from other roles.
+N/A
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables
-passed in as parameters) is always nice for users too:
+```yaml
+- hosts: wgnode1
+  roles:
+     - { role: wireguard }
+  vars:
+    wg_configs:
+      wg0:
+        interface:
+          PrivateKey: 'uP8UTl8CceQ2AAiUaU1W/+PwmOy9y7/TE3JB5uLGyWw='
+          ListenPort: 51820
+          Address: 192.0.2.1/24
+        peer:
+          wgnode2:
+            PublicKey: 'M6xTAj1VNpE6sXMk24jJ5/iCFOmqINVYZp8MAAJE7Eo='
+            AllowedIPs: [ '192.0.2.2/32' ]
+            Endpoint: '198.51.100.3:51820'
 
-    - hosts: servers
-      roles:
-         - { role: wireguard, x: 42 }
+```
 
 License
 -------
 
 BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a
-website (HTML is not allowed).
