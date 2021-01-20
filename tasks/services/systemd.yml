@@ -1,11 +1,28 @@
 ---
-- name: "Manage Wireguard Systemd Services"
-  systemd:
-    enabled: true
-    name: "{{ wg_systemd_service_prefix }}{{ wg_service.wg_interface.key }}"
-    state: 'started'
-  loop: "{{ wg_configs_result.results }}"
+# The correct way...
+# - name: "Manage Wireguard Systemd Services"
+#   systemd:
+#     enabled: true
+#     name: "{{ wg_systemd_service_prefix }}{{ wg_service.wg_interface.key }}"
+#     state: 'started'
+#   loop: "{{ wg_configs_result.results }}"
+#   loop_control:
+#     loop_var: wg_service
+#   no_log: "{{ wg_hide_private_key }}"
+#   become: true
+
+# Doing this because ^ is having issues with systemd instantiated services
+# ie. wg-quick@INTERFACE
+- name: "Enable Wireguard Services"
+  command: "systemctl enable {{ wg_systemd_service_prefix }}{{ service.key }}"
+  loop: "{{ wg_configs | dict2items }}"
   loop_control:
-    loop_var: wg_service
-  no_log: "{{ wg_hide_private_key }}"
+    loop_var: service
+  become: true
+
+- name: "Start Wireguard Services"
+  command: "systemctl start {{ wg_systemd_service_prefix }}{{ service.key }}"
+  loop: "{{ wg_configs | dict2items }}"
+  loop_control:
+    loop_var: service
   become: true
